@@ -1,3 +1,8 @@
+dservice/Debug/
+dservice/x64/
+dservice/.vs/
+dservice/*.user
+
 # Prerequisites
 *.d
 

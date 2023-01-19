@@ -1,0 +1,7 @@
+LIBRARY    "DService.dll"
+
+EXPORTS
+GetClassObject
+DestroyObject
+GetClassNames
+
