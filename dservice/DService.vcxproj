@@ -193,6 +193,7 @@
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
     </ClCompile>
+    <ClCompile Include="shell.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -204,7 +205,11 @@
     <None Include="DService.def" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\AddInDefBase.h" />
+    <ClInclude Include="..\include\ComponentBase.h" />
+    <ClInclude Include="..\include\IMemoryManager.h" />
     <ClInclude Include="DService.h" />
+    <ClInclude Include="shell.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
