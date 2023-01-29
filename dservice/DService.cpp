@@ -7,6 +7,9 @@
 
 #include "DService.h"
 
+static const wchar_t* g_PropNames[] = { L"" };
+static const wchar_t* g_PropNamesRu[] = { L"" };
+
 static const wchar_t* g_MethodNamesRu[] = {
     L"Версия",
     L"ВыполнитьСкрипт"
@@ -57,8 +60,21 @@ const WCHAR_T* GetClassNames()
     return names;
 }
 
+DService::DService()
+{
+    m_iMemory = 0;
+    m_iConnect = 0;
+}
+
+DService::~DService()
+{
+}
+
 bool DService::Init(void* pConnection)
 { 
+    m_iConnect = (IAddInDefBase*)pConnection;
+    return m_iConnect != NULL;
+
     return false;
 }
 
@@ -71,8 +87,21 @@ void DService::Done()
 {
 }
 
-bool DService::RegisterExtensionAs(WCHAR_T** wsLanguageExt)
+bool DService::RegisterExtensionAs(WCHAR_T** wsExtensionName)
 { 
+    const wchar_t* wsExtension = L"DSNativeExtension";
+    int iActualSize = ::wcslen(wsExtension) + 1;
+    WCHAR_T* dest = 0;
+
+    if (m_iMemory)
+    {
+        if (m_iMemory->AllocMemory((void**)wsExtensionName, iActualSize * sizeof(WCHAR_T))) {
+            ::convToShortWchar(wsExtensionName, wsExtension, iActualSize);
+        }
+
+        return true;
+    }
+    
     return false; 
 }
 
@@ -83,12 +112,51 @@ long DService::GetNProps()
 
 long DService::FindProp(const WCHAR_T* wsPropName)
 { 
-    return -1;
+    long plPropNum = -1;
+    wchar_t* propName = 0;
+
+    ::convFromShortWchar(&propName, wsPropName);
+    plPropNum = findName(g_PropNames, propName, eLastProperties);
+
+    if (plPropNum == -1) {
+        plPropNum = findName(g_PropNamesRu, propName, eLastProperties);
+    }
+
+    delete[] propName;
+
+    return plPropNum;
 }
 
 const WCHAR_T* DService::GetPropName(long lPropNum, long lPropAlias)
 { 
-    return 0;
+    if (lPropNum >= eLastProperties)
+        return NULL;
+
+    const wchar_t* wsCurrentName = NULL;
+    WCHAR_T* wsPropName = NULL;
+    int iActualSize = 0;
+
+    switch (lPropAlias)
+    {
+    case 0: // First language
+        wsCurrentName = g_PropNames[lPropNum];
+        break;
+    case 1: // Second language
+        wsCurrentName = g_PropNamesRu[lPropNum];
+        break;
+    default:
+        return 0;
+    }
+
+    iActualSize = wcslen(wsCurrentName) + 1;
+
+    if (m_iMemory && wsCurrentName) {
+        if (m_iMemory->AllocMemory((void**)&wsPropName, iActualSize * sizeof(WCHAR_T))) {
+            ::convToShortWchar(&wsPropName, wsCurrentName, iActualSize);
+        }
+    }
+
+    return wsPropName;
 }
 
 bool DService::GetPropVal(const long lPropNum, tVariant* pvarPropVal)
@@ -118,12 +186,51 @@ long DService::GetNMethods()
 
 long DService::FindMethod(const WCHAR_T* wsMethodName)
 { 
-    return -1;
+    long plMethodNum = -1;
+    wchar_t* name = 0;
+
+    ::convFromShortWchar(&name, wsMethodName);
+
+    plMethodNum = findName(g_MethodNames, name, eLastMethod);
+
+    if (plMethodNum == -1)
+        plMethodNum = findName(g_MethodNamesRu, name, eLastMethod);
+
+    return plMethodNum;
 }
 
 const WCHAR_T* DService::GetMethodName(const long lMethodNum, const long lMethodAlias)
 { 
-    return 0;
+    if (lMethodNum >= eLastMethod) {
+        return NULL;
+    }
+
+    const wchar_t* wsCurrentName = NULL;
+    WCHAR_T* wsMethodName = NULL;
+    int iActualSize = 0;
+
+    switch (lMethodAlias)
+    {
+    case 0: // First language
+        wsCurrentName = g_MethodNames[lMethodNum];
+        break;
+    case 1: // Second language
+        wsCurrentName = g_MethodNamesRu[lMethodNum];
+        break;
+    default:
+        return 0;
+    }
+
+    iActualSize = wcslen(wsCurrentName) + 1;
+
+    if (m_iMemory && wsCurrentName)
+    {
+        if (m_iMemory->AllocMemory((void**)&wsMethodName, iActualSize * sizeof(WCHAR_T))) {
+            ::convToShortWchar(&wsMethodName, wsCurrentName, iActualSize);
+        }
+    }
+
+    return wsMethodName;
 }
 
 long DService::GetNParams(const long lMethodNum)
@@ -223,7 +330,21 @@ void DService::SetUserInterfaceLanguageCode(const WCHAR_T* lang)
 
 bool DService::setMemManager(void* mem)
 {
-    return false;
+    m_iMemory = (IMemoryManager*)mem;
+    return m_iMemory != 0;
+}
+
+long DService::findName(const wchar_t* names[], const wchar_t* name, const uint32_t size) const
+{
+    long ret = -1;
+    for (uint32_t i = 0; i < size; i++)
+    {
+        if (!wcscmp(names[i], name)) {
+            ret = i;
+            break;
+        }
+    }
+    return ret;
 }
 
 uint32_t convToShortWchar(WCHAR_T** Dest, const wchar_t* Source, uint32_t len)
@@ -287,3 +408,4 @@ uint32_t getLenShortWcharStr(const WCHAR_T* Source)
 
     return res;
 }
+

@@ -25,8 +25,8 @@ public:
         eLastMethod
     };
 
-    explicit DService(void) noexcept;
-    virtual ~DService() noexcept;
+    DService(void);
+    virtual ~DService();
 
     // IInitDoneBase
     virtual bool ADDIN_API Init(void*);
@@ -56,19 +56,15 @@ public:
     // LocaleBase
     virtual void ADDIN_API SetLocale(const WCHAR_T* loc);
     virtual void ADDIN_API SetUserInterfaceLanguageCode(const WCHAR_T* lang);
+
 private:
+    long findName(const wchar_t* names[], const wchar_t* name, const uint32_t size) const;
+
     // Attributes
     std::u16string m_userLang;
+
+    IAddInDefBase* m_iConnect;
     IMemoryManager* m_iMemory;
 };
-
-inline DService::DService() noexcept
-{
-    m_iMemory = 0;
-}
-
-inline DService::~DService() noexcept
-{
-}
 
 #endif //__DSERVICE_H__

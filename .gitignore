@@ -1,7 +1,9 @@
 dservice/Debug/
+dservice/Release/
 dservice/x64/
 dservice/.vs/
 dservice/*.user
+*.zip
 
 # Prerequisites
 *.d
