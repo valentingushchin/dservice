@@ -26,11 +26,11 @@
 
 #include "DService.h"
 
-std::string SampleAddIn::extensionName() {
+std::string DService::extensionName() {
     return "Sample";
 }
 
-SampleAddIn::SampleAddIn() {
+DService::DService() {
     // Universal property. Could store any supported by native api type.
     sample_property = std::make_shared<variant_t>();
     AddProperty(L"SampleProperty", L"ОбразецСвойства", sample_property);
@@ -43,11 +43,11 @@ SampleAddIn::SampleAddIn() {
 
     // Method registration.
     // Lambdas as method handlers are not supported.
-    AddMethod(L"Add", L"Сложить", this, &SampleAddIn::add);
-    AddMethod(L"Message", L"Сообщить", this, &SampleAddIn::message);
-    AddMethod(L"CurrentDate", L"ТекущаяДата", this, &SampleAddIn::currentDate);
-    AddMethod(L"Assign", L"Присвоить", this, &SampleAddIn::assign);
-    AddMethod(L"SamplePropertyValue", L"ЗначениеСвойстваОбразца", this, &SampleAddIn::samplePropertyValue);
+    AddMethod(L"Add", L"Сложить", this, &DService::add);
+    AddMethod(L"Message", L"Сообщить", this, &DService::message);
+    AddMethod(L"CurrentDate", L"ТекущаяДата", this, &DService::currentDate);
+    AddMethod(L"Assign", L"Присвоить", this, &DService::assign);
+    AddMethod(L"SamplePropertyValue", L"ЗначениеСвойстваОбразца", this, &DService::samplePropertyValue);
 
     // Method registration with default arguments
     //
@@ -55,15 +55,15 @@ SampleAddIn::SampleAddIn() {
     // Proper way to register def args would be then:
     //        std::map<long, variant_t> def_args;
     //        def_args.insert({0, 5});
-    //        AddMethod(u"Sleep", u"Ожидать", this, &SampleAddIn::sleep, std::move(def_args));
+    //        AddMethod(u"Sleep", u"Ожидать", this, &DService::sleep, std::move(def_args));
     //
-    AddMethod(L"Sleep", L"Ожидать", this, &SampleAddIn::sleep, {{0, 5}});
+    AddMethod(L"Sleep", L"Ожидать", this, &DService::sleep, {{0, 5}});
 
 }
 
 // Sample of addition method. Support both integer and string params.
 // Every exceptions derived from std::exceptions are handled by components API
-variant_t SampleAddIn::add(const variant_t &a, const variant_t &b) {
+variant_t DService::add(const variant_t &a, const variant_t &b) {
     if (std::holds_alternative<int32_t>(a) && std::holds_alternative<int32_t>(b)) {
         return std::get<int32_t>(a) + std::get<int32_t>(b);
     } else if (std::holds_alternative<std::string>(a) && std::holds_alternative<std::string>(b)) {
@@ -73,7 +73,7 @@ variant_t SampleAddIn::add(const variant_t &a, const variant_t &b) {
     }
 }
 
-void SampleAddIn::message(const variant_t &msg) {
+void DService::message(const variant_t &msg) {
     std::visit(overloaded{
             [&](const std::string &v) { AddError(ADDIN_E_INFO, extensionName(), v, false); },
             [&](const int32_t &v) {
@@ -94,7 +94,7 @@ void SampleAddIn::message(const variant_t &msg) {
     }, msg);
 }
 
-void SampleAddIn::sleep(const variant_t &delay) {
+void DService::sleep(const variant_t &delay) {
     using namespace std;
     // It safe to get any type from variant.
     // Exceptions are handled by component API.
@@ -102,17 +102,17 @@ void SampleAddIn::sleep(const variant_t &delay) {
 }
 
 // Out params support option must be enabled for this to work
-void SampleAddIn::assign(variant_t &out) {
+void DService::assign(variant_t &out) {
     out = true;
 }
 
 // Despite that you can return property value through method this is not recommended
 // due to unwanted data copying
-variant_t SampleAddIn::samplePropertyValue() {
+variant_t DService::samplePropertyValue() {
     return *sample_property;
 }
 
-variant_t SampleAddIn::currentDate() {
+variant_t DService::currentDate() {
     using namespace std;
     tm current{};
     time_t t = time(nullptr);

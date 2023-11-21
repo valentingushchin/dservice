@@ -22,11 +22,11 @@
 
 #include "Component.h"
 
-class SampleAddIn final : public Component {
+class DService final : public Component {
 public:
     const char *Version = u8"1.0.0";
 
-    SampleAddIn();
+    DService();
 
 private:
     std::string extensionName() override;
