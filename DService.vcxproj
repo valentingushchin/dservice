@@ -28,9 +28,6 @@
     <ClCompile Include="src\exports.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\AddInDefBase.h" />
-    <ClInclude Include="include\ComponentBase.h" />
-    <ClInclude Include="include\IMemoryManager.h" />
     <ClInclude Include="src\Component.h" />
     <ClInclude Include="src\DService.h" />
     <ClInclude Include="src\stdafx.h" />
