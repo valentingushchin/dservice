@@ -1,70 +1,49 @@
+/*
+ *  Modern Native AddIn
+ *  Copyright (C) 2018  Infactum
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
 
-#ifndef __DSERVICE_H__
-#define __DSERVICE_H__
+#ifndef DSERVICE_H
+#define DSERVICE_H
 
-#include <wtypes.h>
+#include "Component.h"
 
-//#include "shellapi.h"
-
-#include "ComponentBase.h"
-#include "AddInDefBase.h"
-#include "IMemoryManager.h"
-
-class DService : public IComponentBase
-{
+class SampleAddIn final : public Component {
 public:
-    enum Props
-    {
-        eLastProperties
-    };
+    const char *Version = u8"1.0.0";
 
-    enum Methods
-    {
-        eVersion = 0,
-        psExec = 1,
-        eLastMethod
-    };
-
-    DService(void);
-    virtual ~DService();
-
-    // IInitDoneBase
-    virtual bool ADDIN_API Init(void*);
-    virtual bool ADDIN_API setMemManager(void* mem);
-    virtual long ADDIN_API GetInfo();
-    virtual void ADDIN_API Done();
-
-    // ILanguageExtenderBase
-    virtual bool ADDIN_API RegisterExtensionAs(WCHAR_T** wsLanguageExt);
-    virtual long ADDIN_API GetNProps();
-    virtual long ADDIN_API FindProp(const WCHAR_T* wsPropName);
-    virtual const WCHAR_T* ADDIN_API GetPropName(long lPropNum, long lPropAlias);
-    virtual bool ADDIN_API GetPropVal(const long lPropNum, tVariant* pvarPropVal);
-    virtual bool ADDIN_API SetPropVal(const long lPropNum, tVariant* varPropVal);
-    virtual bool ADDIN_API IsPropReadable(const long lPropNum);
-    virtual bool ADDIN_API IsPropWritable(const long lPropNum);
-    virtual long ADDIN_API GetNMethods();
-    virtual long ADDIN_API FindMethod(const WCHAR_T* wsMethodName);
-    virtual const WCHAR_T* ADDIN_API GetMethodName(const long lMethodNum, const long lMethodAlias);
-    virtual long ADDIN_API GetNParams(const long lMethodNum);
-    virtual bool ADDIN_API GetParamDefValue(const long lMethodNum, const long lParamNum, tVariant *pvarParamDefValue);
-    virtual bool ADDIN_API HasRetVal(const long lMethodNum);
-    virtual bool ADDIN_API CallAsProc(const long lMethodNum, tVariant* paParams, const long lSizeArray);
-    virtual bool ADDIN_API CallAsFunc(const long lMethodNum, tVariant* pvarRetValue, tVariant* paParams, const long lSizeArray);
-    operator IComponentBase*() noexcept { return this; }
-
-    // LocaleBase
-    virtual void ADDIN_API SetLocale(const WCHAR_T* loc);
-    virtual void ADDIN_API SetUserInterfaceLanguageCode(const WCHAR_T* lang);
+    SampleAddIn();
 
 private:
-    long findName(const wchar_t* names[], const wchar_t* name, const uint32_t size) const;
+    std::string extensionName() override;
 
-    // Attributes
-    std::u16string m_userLang;
+    variant_t add(const variant_t &a, const variant_t &b);
 
-    IAddInDefBase* m_iConnect;
-    IMemoryManager* m_iMemory;
+    void message(const variant_t &msg);
+
+    void sleep(const variant_t &delay);
+
+    void assign(variant_t &out);
+
+    variant_t samplePropertyValue();
+
+    variant_t currentDate();
+
+    std::shared_ptr<variant_t> sample_property;
 };
 
-#endif //__DSERVICE_H__
+#endif //DSERVICE_H

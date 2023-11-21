@@ -1,12 +1,10 @@
-// stdafx.h : include file for standard system include files,
-// or project specific include files that are used frequently, but
-// are changed infrequently
-//
-#ifndef __STDAFX_H__
-#define __STDAFX_H__
+#ifndef STDAFX_H
+#define STDAFX_H
 
-#ifndef __linux__
+#ifdef _WINDOWS
+
 #include <windows.h>
-#endif //__linux__
 
-#endif //__STDAFX_H__
+#endif //_WINDOWS
+
+#endif //STDAFX_H
