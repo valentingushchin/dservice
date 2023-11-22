@@ -27,7 +27,7 @@
 #include "DService.h"
 
 std::string DService::extensionName() {
-    return "Sample";
+    return "Generic";
 }
 
 DService::DService() {
