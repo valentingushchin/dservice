@@ -36,7 +36,7 @@ long GetClassObject(const WCHAR_T *clsName, IComponentBase **pInterface) {
     if (!*pInterface) {
         auto cls_name = std::u16string(reinterpret_cast<const char16_t *>(clsName));
         if (cls_name == u"Sample") {
-            *pInterface = new SampleAddIn;
+            *pInterface = new DService;
         }
         return (long) *pInterface;
     }
