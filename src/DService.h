@@ -31,19 +31,16 @@ public:
 private:
     std::string extensionName() override;
 
-    variant_t add(const variant_t &a, const variant_t &b);
-
     void message(const variant_t &msg);
-
     void sleep(const variant_t &delay);
-
-    void assign(variant_t &out);
-
-    variant_t samplePropertyValue();
-
     variant_t currentDate();
 
+    /* ++============== Sample ==============
     std::shared_ptr<variant_t> sample_property;
+    variant_t add(const variant_t& a, const variant_t& b);
+    void assign(variant_t& out);
+    variant_t samplePropertyValue();
+    // -- ============== Sample ==============*/
 };
 
-#endif //DSERVICE_H
+#endif // DSERVICE_H
