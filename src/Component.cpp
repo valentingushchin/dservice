@@ -464,3 +464,23 @@ std::u16string Component::toUTF16String(std::string_view src) {
     return cvt_utf8_utf16.from_bytes(src.data(), src.data() + src.size());
 #endif
 }
+
+// ++ regex
+void Component::returnString(tVariant* Result, const std::wstring& String) const {
+    auto count = 1 + String.size();
+    auto size = count * sizeof std::wstring::value_type();
+    if (!size || !memory_manager->AllocMemory(reinterpret_cast<void**>(&Result->pwstrVal), size)) return;
+#ifdef __linux__
+    Chars::ToWCHAR(&Result->pwstrVal, String.data());
+#elif _WIN32
+    if (wcscpy_s(Result->pwstrVal, count, String.c_str())) return;
+#endif
+    Result->vt = VTYPE_PWSTR;
+    Result->wstrLen = count - 1;
+}
+
+void Component::returnBool(tVariant* Result, bool Value) {
+    Result->vt = VTYPE_BOOL;
+    Result->bVal = Value;
+}
+// -- regex

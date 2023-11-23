@@ -1,6 +1,6 @@
-#include "json.h"
 #include <utility>
 #include <memory>
+#include "json.h"
 
 namespace JSON {
 	std::wstring toHex ( wchar_t Value ) {

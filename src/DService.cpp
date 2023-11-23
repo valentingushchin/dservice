@@ -23,7 +23,10 @@
 #include <stdexcept>
 #include <string>
 #include <thread>
+#include <regex>
 
+#include "regex/json.h"
+#include "regex/chars.h"
 #include "DService.h"
 
 DService::DService() {
@@ -49,7 +52,13 @@ DService::DService() {
     //
     AddMethod(L"Sleep", L"Ожидать", this, &DService::sleep, {{0, 5}});
 
-    /* ++ ============== Sample ==============
+    // ++ regex
+    AddMethod(L"RegSelect", L"РегВыбрать", this, &DService::regSelect);
+    //AddMethod(L"RegTest", L"РегТест", this, &DService::regTest);
+    //AddMethod(L"RegReplace", L"РегЗаменить", this, &DService::regReplace);
+
+    /* 
+    // ++ ============== Sample ==============
     // Universal property. Could store any supported by native api type.
     sample_property = std::make_shared<variant_t>();
     AddProperty(L"SampleProperty", L"ОбразецСвойства", sample_property);
@@ -57,8 +66,99 @@ DService::DService() {
     AddMethod(L"Add", L"Сложить", this, &DService::add);
     AddMethod(L"Assign", L"Присвоить", this, &DService::assign);
     AddMethod(L"SamplePropertyValue", L"ЗначениеСвойстваОбразца", this, &DService::samplePropertyValue);
-    // -- ============== Sample ==============*/
+    // -- ============== Sample ==============
+    */
 }
+
+// ++ regex
+std::wregex DService::regInit(const std::wstring& Pattern) {
+    std::wregex object;
+    try {
+        object.imbue(std::locale("ru_RU.UTF-8"));
+    }
+    catch (const std::exception& e) {
+        // Will ignore that issue
+    }
+    object.assign(Pattern, std::regex_constants::icase);
+    return object;
+}
+
+bool DService::regSelect(variant_t &String, const variant_t &Query, variant_t &Result) {
+    std::wstring string{ Chars::WCHARToWide(String.pwstrVal, String.wstrLen) };
+    auto next = Params + 1;
+    std::wstring query = Chars::WCHARToWide(next->pwstrVal, next->wstrLen);
+    std::wsmatch match;
+    using namespace JSON;
+    Array json;
+    std::wstring::const_iterator begin(string.cbegin());
+    try {
+        auto pattern{ regInit(query) };
+        while (regex_search(begin, string.cend(), match, pattern)) {
+            auto record = json.Add<Object>();
+            record->Add<String>(L"Value")->Set(match.str(0));
+            auto subMatches = record->Add<Array>(L"Groups");
+            for (size_t i = 1; i < match.size(); ++i) {
+                subMatches->Add<String>()->Set(match.str(i));
+            }
+            begin = match.suffix().first;
+        }
+    }
+    catch (const std::exception& e) {
+        SetError(e.what());
+        return false;
+    }
+    catch (...) {
+        SetError("Unknown error occurred in std::regex_search");
+        return false;
+    }
+    std::wstring result;
+    json.Presentation(&result);
+    returnString(Result, result);
+
+    return true;
+}
+/*
+bool DService::regTest(tVariant* Params, tVariant* Result) {
+    std::wstring string{ Chars::WCHARToWide(Params->pwstrVal, Params->wstrLen) };
+    auto next = Params + 1;
+    std::wstring query = Chars::WCHARToWide(next->pwstrVal, next->wstrLen);
+    std::wsmatch match;
+    try {
+        returnBool(Result, std::regex_search(string, match, regInit(query)));
+    }
+    catch (const std::exception& e) {
+        SetError(e.what());
+        return false;
+    }
+    catch (...) {
+        SetError("Unknown error occurred in std::regex_search");
+        return false;
+    }
+    return true;
+}
+
+bool DService::regReplace(tVariant* Params, tVariant* Result) {
+    std::wstring string{ Chars::WCHARToWide(Params->pwstrVal, Params->wstrLen) };
+    auto next = Params + 1;
+    std::wstring query = Chars::WCHARToWide(next->pwstrVal, next->wstrLen);
+    ++next;
+    std::wstring replacement = Chars::WCHARToWide(next->pwstrVal, next->wstrLen);
+    std::wsmatch match;
+    try {
+        returnString(Result, std::regex_replace(string, regInit(query), replacement));
+    }
+    catch (const std::exception& e) {
+        SetError(e.what());
+        return false;
+    }
+    catch (...) {
+        SetError("Unknown error occurred in std::regex_replace");
+        return false;
+    }
+    return true;
+}
+// -- regex
+*/
 
 std::string DService::extensionName() {
     return "Generic";
@@ -126,4 +226,5 @@ void DService::assign(variant_t &out) {
 variant_t DService::samplePropertyValue() {
     return *sample_property;
 }
-// -- ============== Sample ==============*/
+// -- ============== Sample ==============
+*/

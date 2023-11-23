@@ -26,10 +26,14 @@
     <ClCompile Include="src\dllmain.cpp" />
     <ClCompile Include="src\DService.cpp" />
     <ClCompile Include="src\exports.cpp" />
+    <ClCompile Include="src\regex\chars.cpp" />
+    <ClCompile Include="src\regex\json.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Component.h" />
     <ClInclude Include="src\DService.h" />
+    <ClInclude Include="src\regex\chars.h" />
+    <ClInclude Include="src\regex\json.h" />
     <ClInclude Include="src\stdafx.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

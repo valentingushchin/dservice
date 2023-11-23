@@ -97,6 +97,20 @@ public:
     bool ADDIN_API CallAsFunc(const long method_num, tVariant *ret_value, tVariant *params,
                               const long array_size) final;
 
+    // regex
+    template <typename T>
+    void SetError(const T& Message) {
+        if constexpr (std::is_same_v<T, std::wstring>) {
+            LastError = Message;
+        }
+        else if constexpr (std::is_same_v<T, const char*>) {
+            LastError = Chars::StringToWide(std::string(Message));
+        }
+        else {
+            LastError = Chars::StringToWide(Message);
+        }
+    }
+
 protected:
     virtual std::string extensionName() = 0;
 
@@ -118,7 +132,9 @@ protected:
     template<typename T, typename C, typename ... Ts>
     void AddMethod(const std::wstring &alias, const std::wstring &alias_ru, C *c, T(C::*f)(Ts ...),
                    std::map<long, variant_t> &&def_args = {});
-
+    // regex
+    void returnString(tVariant* Result, const std::wstring& String) const;
+    static void returnBool(tVariant* Result, bool Value);
 private:
     class PropertyMeta;
 
@@ -157,6 +173,8 @@ private:
     std::vector<MethodMeta> methods_meta;
     static constexpr char UNKNOWN_EXCP[] = u8"Unknown unhandled exception";
 
+    // regex
+    std::wstring LastError;
 };
 
 class Component::PropertyMeta {

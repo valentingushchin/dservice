@@ -1,5 +1,5 @@
-#ifndef __json_h__
-#define __json_h__
+#ifndef	JSON_H
+#define JSON_H
 #include <string>
 #include <memory>
 #include <vector>
@@ -78,4 +78,4 @@ namespace JSON {
 		void Presentation ( std::wstring* Result ) override;
 	};
 }
-#endif
+#endif // JSON_H
