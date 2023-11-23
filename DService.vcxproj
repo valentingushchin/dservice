@@ -26,12 +26,10 @@
     <ClCompile Include="src\dllmain.cpp" />
     <ClCompile Include="src\DService.cpp" />
     <ClCompile Include="src\exports.cpp" />
-    <ClCompile Include="src\regex\regex.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Component.h" />
     <ClInclude Include="src\DService.h" />
-    <ClInclude Include="src\regex\regex.h" />
     <ClInclude Include="src\stdafx.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
