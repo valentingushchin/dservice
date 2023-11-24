@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
-project(SampleAddIn)
+project(DService)
 
 set(CMAKE_CXX_STANDARD 17)
-set(TARGET SampleAddIn)
+set(TARGET DService)
 
 option(CASE_INSENSITIVE "Case insensitive method names" OFF)
 option(STATIC_CRT "Static CRT linkage" OFF)
@@ -15,8 +15,8 @@ list(APPEND SOURCES
         src/exports.cpp
         src/Component.cpp
         src/Component.h
-        src/SampleAddIn.cpp
-        src/SampleAddIn.h)
+        src/DService.cpp
+        src/DService.h)
 
 if (ANDROID)
     list(APPEND SOURCES

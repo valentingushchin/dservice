@@ -39,12 +39,12 @@ private:
     variant_t currentDate();
 
     // regex
-    bool regSelect(variant_t &String, const variant_t &Query, variant_t &Result);
+    //bool regSelect(variant_t &String, const variant_t &Query, variant_t &Result);
     //bool regTest(tVariant* Params, tVariant* Result);
     //bool regReplace(tVariant* Params, tVariant* Result);
 
     /* 
-    // ++============== Sample ==============
+    // ++ ============== Sample ==============
     std::shared_ptr<variant_t> sample_property;
     variant_t add(const variant_t& a, const variant_t& b);
     void assign(variant_t& out);

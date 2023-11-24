@@ -464,7 +464,7 @@ std::u16string Component::toUTF16String(std::string_view src) {
     return cvt_utf8_utf16.from_bytes(src.data(), src.data() + src.size());
 #endif
 }
-
+/*
 // ++ regex
 void Component::returnString(tVariant* Result, const std::wstring& String) const {
     auto count = 1 + String.size();
@@ -484,3 +484,4 @@ void Component::returnBool(tVariant* Result, bool Value) {
     Result->bVal = Value;
 }
 // -- regex
+*/

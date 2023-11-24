@@ -53,7 +53,7 @@ DService::DService() {
     AddMethod(L"Sleep", L"Ожидать", this, &DService::sleep, {{0, 5}});
 
     // ++ regex
-    AddMethod(L"RegSelect", L"РегВыбрать", this, &DService::regSelect);
+    //AddMethod(L"RegSelect", L"РегВыбрать", this, &DService::regSelect);
     //AddMethod(L"RegTest", L"РегТест", this, &DService::regTest);
     //AddMethod(L"RegReplace", L"РегЗаменить", this, &DService::regReplace);
 
@@ -70,6 +70,7 @@ DService::DService() {
     */
 }
 
+/*
 // ++ regex
 std::wregex DService::regInit(const std::wstring& Pattern) {
     std::wregex object;
@@ -117,7 +118,7 @@ bool DService::regSelect(variant_t &String, const variant_t &Query, variant_t &R
 
     return true;
 }
-/*
+
 bool DService::regTest(tVariant* Params, tVariant* Result) {
     std::wstring string{ Chars::WCHARToWide(Params->pwstrVal, Params->wstrLen) };
     auto next = Params + 1;
