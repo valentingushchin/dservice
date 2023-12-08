@@ -28,14 +28,14 @@
 
 const WCHAR_T *GetClassNames() {
     // Might contain multiple class names seperated by |
-    static char16_t cls_names[] = u"Generic";
+    static char16_t cls_names[] = u"Gen";
     return reinterpret_cast<WCHAR_T *>(cls_names);
 }
 
 long GetClassObject(const WCHAR_T *clsName, IComponentBase **pInterface) {
     if (!*pInterface) {
         auto cls_name = std::u16string(reinterpret_cast<const char16_t *>(clsName));
-        if (cls_name == u"Generic") {
+        if (cls_name == u"Gen") {
             *pInterface = new DService;
         }
         return (long) *pInterface;
