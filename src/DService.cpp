@@ -4,10 +4,7 @@
 #include <stdexcept>
 #include <string>
 #include <thread>
-#include <regex>
 
-#include "regex/json.h"
-#include "regex/chars.h"
 #include "DService.h"
 
 DService::DService() {
@@ -38,95 +35,6 @@ DService::DService() {
     */
 }
 
-/*
-std::wregex DService::regInit(const std::wstring& Pattern) {
-    std::wregex object;
-    try {
-        object.imbue(std::locale("ru_RU.UTF-8"));
-    }
-    catch (const std::exception& e) {
-        // Will ignore that issue
-    }
-    object.assign(Pattern, std::regex_constants::icase);
-    return object;
-}
-
-bool DService::regSelect(variant_t &String, const variant_t &Query, variant_t &Result) {
-    std::wstring string{ Chars::WCHARToWide(String.pwstrVal, String.wstrLen) };
-    auto next = Params + 1;
-    std::wstring query = Chars::WCHARToWide(next->pwstrVal, next->wstrLen);
-    std::wsmatch match;
-    using namespace JSON;
-    Array json;
-    std::wstring::const_iterator begin(string.cbegin());
-    try {
-        auto pattern{ regInit(query) };
-        while (regex_search(begin, string.cend(), match, pattern)) {
-            auto record = json.Add<Object>();
-            record->Add<String>(L"Value")->Set(match.str(0));
-            auto subMatches = record->Add<Array>(L"Groups");
-            for (size_t i = 1; i < match.size(); ++i) {
-                subMatches->Add<String>()->Set(match.str(i));
-            }
-            begin = match.suffix().first;
-        }
-    }
-    catch (const std::exception& e) {
-        SetError(e.what());
-        return false;
-    }
-    catch (...) {
-        SetError("Unknown error occurred in std::regex_search");
-        return false;
-    }
-    std::wstring result;
-    json.Presentation(&result);
-    returnString(Result, result);
-
-    return true;
-}
-
-bool DService::regTest(tVariant* Params, tVariant* Result) {
-    std::wstring string{ Chars::WCHARToWide(Params->pwstrVal, Params->wstrLen) };
-    auto next = Params + 1;
-    std::wstring query = Chars::WCHARToWide(next->pwstrVal, next->wstrLen);
-    std::wsmatch match;
-    try {
-        returnBool(Result, std::regex_search(string, match, regInit(query)));
-    }
-    catch (const std::exception& e) {
-        SetError(e.what());
-        return false;
-    }
-    catch (...) {
-        SetError("Unknown error occurred in std::regex_search");
-        return false;
-    }
-    return true;
-}
-
-bool DService::regReplace(tVariant* Params, tVariant* Result) {
-    std::wstring string{ Chars::WCHARToWide(Params->pwstrVal, Params->wstrLen) };
-    auto next = Params + 1;
-    std::wstring query = Chars::WCHARToWide(next->pwstrVal, next->wstrLen);
-    ++next;
-    std::wstring replacement = Chars::WCHARToWide(next->pwstrVal, next->wstrLen);
-    std::wsmatch match;
-    try {
-        returnString(Result, std::regex_replace(string, regInit(query), replacement));
-    }
-    catch (const std::exception& e) {
-        SetError(e.what());
-        return false;
-    }
-    catch (...) {
-        SetError("Unknown error occurred in std::regex_replace");
-        return false;
-    }
-    return true;
-}
-*/
-
 std::string DService::extensionName() {
     return "Gen";
 }
@@ -155,7 +63,6 @@ void DService::sleep(const variant_t& delay) {
 }
 
 variant_t DService::currentDate() {
-    //using namespace std;
     tm current{};
     const time_t t = time(nullptr);
 #ifdef _WINDOWS

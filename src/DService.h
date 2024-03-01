@@ -1,7 +1,6 @@
 #ifndef DSERVICE_H
 #define DSERVICE_H
 
-#include <regex>
 #include "Component.h"
 
 class DService final : public Component {
@@ -10,18 +9,12 @@ public:
 
     DService();
 
-    //static std::wregex regInit(const std::wstring& Pattern);
-
 private:
     std::string extensionName() override;
 
     void message(const variant_t &msg);
     void sleep(const variant_t &delay);
     variant_t currentDate();
-
-    //bool regSelect(variant_t &String, const variant_t &Query, variant_t &Result);
-    //bool regTest(tVariant* Params, tVariant* Result);
-    //bool regReplace(tVariant* Params, tVariant* Result);
 
     /* 
     std::shared_ptr<variant_t> sample_property;
